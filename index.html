@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cadastro de Usuário</title>
+</head>
+<body>
+
+	<h1>Cadastro de Usuário</h1>
+
+	<form>
+		<label for="usuario">Nome de usuário:</label>
+		<input type="text" id="usuario" name="usuario" required><br><br>
+
+		<label for="senha">Senha:</label>
+		<input type="password" id="senha" name="senha" required><br><br>
+
+		<label for="nome-arquivo">Nome do arquivo:</label>
+		<input type="text" id="nome-arquivo" name="nome-arquivo" required><br><br>
+
+		<input type="button" value="Cadastrar" onclick="cadastrarUsuario()">
+	</form>
+
+	<script>
+	// Função para cadastrar usuário
+	function cadastrarUsuario() {
+		// Obtém as informações do usuário
+		var usuario = document.getElementById("usuario").value;
+		var senha = document.getElementById("senha").value;
+		var nomeArquivo = document.getElementById("nome-arquivo").value;
+
+		// Valida as informações do usuário
+		if (!usuario || !senha || !nomeArquivo) {
+			alert("Por favor, preencha todos os campos corretamente.");
+			return;
+		}
+
+		if (!validarSenha(senha)) {
+			alert("A senha deve ter pelo menos 8 caracteres, uma letra maiúscula, um número e um caractere especial.");
+			return;
+		}
+
+		// Envia as informações para o servidor
+		var xhr = new XMLHttpRequest();
+		var url = "senhas.php";
+		var params = "usuario=" + encodeURIComponent(usuario) + "&senha=" + encodeURIComponent(senha) + "&nome_arquivo=" + encodeURIComponent(nomeArquivo) + "&senha_validada=true";
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				if (xhr.responseText === "usuario_exist") {
+					alert("O nome de usuário informado já existe. Por favor, escolha outro nome de usuário.");
+				} else if (xhr.responseText === "sucesso") {
+					alert("Usuário cadastrado com sucesso!");
+				} else {
+					alert("Erro ao cadastrar usuário.");
+				}
+			}
+		};
+		xhr.send(params);
+	}
+
+	// Função para validar se a senha contém pelo menos um número, um caractere especial e uma letra maiúscula
+	function validarSenha(senha) {
+		var regex = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+		return regex.test(senha);
+	}
+	</script>
+
+</body>
+</html>
