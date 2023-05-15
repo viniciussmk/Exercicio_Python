@@ -1,0 +1,1 @@
+# Projeto básico de uma interface de login personalizada utilizando CSS e HTML no Front, e no Back utilizando Javacript e Python para criar as validações e alertas, e o PHP para armazenar as senhas dos usuários em arquivo.
